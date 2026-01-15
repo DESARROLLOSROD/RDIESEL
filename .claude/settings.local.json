@@ -7,7 +7,8 @@
       "Bash(copy \"apps\\\\web\\\\.env.example\" \"apps\\\\web\\\\.env\")",
       "Bash(cmd /c \"copy apps\\\\api\\\\.env.example apps\\\\api\\\\.env\")",
       "Bash(cmd /c \"copy apps\\\\web\\\\.env.example apps\\\\web\\\\.env\")",
-      "Bash(pnpm db:push:*)"
+      "Bash(pnpm db:push:*)",
+      "Bash(taskkill:*)"
     ]
   }
 }

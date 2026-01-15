@@ -1,14 +1,19 @@
+# Build stage
 FROM node:20-alpine AS builder
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-RUN npm ci
+# Copy configuration files
+COPY package.json pnpm-lock.yaml* ./
 
-# Copy source and build
 COPY . .
-RUN npm run build
+
+# Install dependencies and build
+RUN pnpm install --no-frozen-lockfile
+RUN pnpm build
 
 # Production image with nginx
 FROM nginx:alpine

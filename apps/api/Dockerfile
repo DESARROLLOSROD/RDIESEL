@@ -1,36 +1,40 @@
+# Production image with Node 20
 FROM node:20-alpine AS builder
+
+# Install pnpm and dependencies
+RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-RUN npm ci
+# Copy configuration files
+COPY package.json pnpm-lock.yaml* ./
+# Note: If building from subdirectory in monorepo, we might need to handle this differently
+# But Railway's Build Context will be the Root Directory if configured so.
 
-# Copy prisma schema and generate client
-COPY prisma ./prisma
-RUN npx prisma generate
-
-# Copy source and build
 COPY . .
-RUN npm run build
 
-# Production image
+# Install dependencies and generate Prisma
+RUN pnpm install --no-frozen-lockfile
+RUN pnpm db:generate
+
+# Build the application
+RUN pnpm build
+
+# Final stage
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy built files and dependencies
+RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
+
+# Copy production files
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/package.json ./
 COPY --from=builder /app/prisma ./prisma
 
 # Expose port
 EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
-
 # Start command
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
