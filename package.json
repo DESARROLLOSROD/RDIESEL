@@ -1,0 +1,29 @@
+{
+  "name": "rdiesel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de Cargas con QR, Bluetooth y Offline",
+  "scripts": {
+    "dev:api": "pnpm --filter @rdiesel/api dev",
+    "dev:web": "pnpm --filter @rdiesel/web dev",
+    "build:api": "pnpm --filter @rdiesel/api build",
+    "build:web": "pnpm --filter @rdiesel/web build",
+    "lint": "pnpm -r lint",
+    "db:generate": "pnpm --filter @rdiesel/api db:generate",
+    "db:push": "pnpm --filter @rdiesel/api db:push",
+    "db:migrate": "pnpm --filter @rdiesel/api db:migrate"
+  },
+  "keywords": [
+    "diesel",
+    "cargas",
+    "qr",
+    "bluetooth",
+    "offline"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

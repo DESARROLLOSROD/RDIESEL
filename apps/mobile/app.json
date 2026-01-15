@@ -1,0 +1,66 @@
+{
+  "expo": {
+    "name": "RDiesel",
+    "slug": "rdiesel",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "rdiesel",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0ea5e9"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.rdiesel.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Se necesita acceso a la camara para escanear codigos QR y tomar fotos de evidencia.",
+        "NSBluetoothAlwaysUsageDescription": "Se necesita acceso a Bluetooth para conectar con el cuentalitros LCQI.",
+        "NSBluetoothPeripheralUsageDescription": "Se necesita acceso a Bluetooth para conectar con el cuentalitros LCQI."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0ea5e9"
+      },
+      "package": "com.rdiesel.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-camera",
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Se necesita acceso a la camara para escanear codigos QR."
+        }
+      ],
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": false,
+          "modes": ["peripheral", "central"]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    }
+  }
+}

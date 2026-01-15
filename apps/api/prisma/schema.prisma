@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Pipa - Vehículo de la empresa que realiza las cargas
+model Pipa {
+  id          String   @id @default(uuid())
+  numero      String   @unique // Número identificador de la pipa
+  placa       String   @unique
+  capacidad   Float    // Capacidad en litros
+  activo      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lcqiId      String?  @unique
+  lcqi        LCQI?    @relation(fields: [lcqiId], references: [id])
+  cargas      Carga[]
+
+  @@map("pipas")
+}
+
+// LCQI - Cuentalitros Bluetooth
+model LCQI {
+  id            String   @id @default(uuid())
+  numeroSerie   String   @unique
+  macBluetooth  String   @unique // Dirección MAC para conexión BT
+  modelo        String?
+  activo        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  pipa          Pipa?
+  cargas        Carga[]
+
+  @@map("lcqis")
+}
+
+// Cliente - Empresa cliente que recibe las cargas
+model Cliente {
+  id          String   @id @default(uuid())
+  nombre      String
+  rfc         String?  @unique
+  contacto    String?
+  telefono    String?
+  email       String?
+  activo      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vehiculos   VehiculoCliente[]
+
+  @@map("clientes")
+}
+
+// Vehículo del cliente - Maquinaria o camión que recibe diesel
+model VehiculoCliente {
+  id              String            @id @default(uuid())
+  clienteId       String
+  cliente         Cliente           @relation(fields: [clienteId], references: [id])
+
+  identificador   String            // ID interno del vehículo en el cliente
+  tipo            TipoVehiculo
+  marca           String?
+  modelo          String?
+  placa           String?
+
+  // Configuración de captura
+  usaHorometro    Boolean           @default(true) // true = horómetro, false = odómetro
+
+  qrCode          String            @unique @default(uuid()) // Código QR único
+  activo          Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  cargas          Carga[]
+
+  @@unique([clienteId, identificador])
+  @@map("vehiculos_cliente")
+}
+
+enum TipoVehiculo {
+  MAQUINARIA
+  CAMION
+  OTRO
+}
+
+// Carga - Registro de una carga de diesel
+model Carga {
+  id                  String        @id @default(uuid())
+
+  // Relaciones
+  pipaId              String
+  pipa                Pipa          @relation(fields: [pipaId], references: [id])
+  lcqiId              String
+  lcqi                LCQI          @relation(fields: [lcqiId], references: [id])
+  vehiculoClienteId   String
+  vehiculoCliente     VehiculoCliente @relation(fields: [vehiculoClienteId], references: [id])
+
+  // Datos de la carga
+  lecturaInicial      Float         // Lectura LCQI al inicio
+  lecturaFinal        Float         // Lectura LCQI al final
+  litrosCargados      Float         // Diferencia calculada
+
+  // Horómetro/Odómetro
+  horometroOdometro   Float         // Valor capturado
+
+  // Estado
+  estado              EstadoCarga   @default(OK)
+  observaciones       String?
+
+  // Metadata del dispositivo
+  deviceId            String        // ID único del dispositivo móvil
+
+  // Timestamps
+  fechaInicio         DateTime      // Momento de inicio de carga
+  fechaFin            DateTime      // Momento de fin de carga
+
+  // Sincronización
+  sincronizado        Boolean       @default(false)
+  fechaSincronizacion DateTime?
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  // Evidencia
+  evidencias          Evidencia[]
+  firma               Firma?
+
+  @@map("cargas")
+}
+
+enum EstadoCarga {
+  OK
+  OBSERVACION
+  ANOMALO
+}
+
+// Evidencia - Fotos de la carga
+model Evidencia {
+  id          String          @id @default(uuid())
+  cargaId     String
+  carga       Carga           @relation(fields: [cargaId], references: [id], onDelete: Cascade)
+
+  tipo        TipoEvidencia
+  url         String          // URL en Supabase Storage
+  checksum    String?         // Para validar integridad
+
+  createdAt   DateTime        @default(now())
+
+  @@map("evidencias")
+}
+
+enum TipoEvidencia {
+  VEHICULO
+  HOROMETRO
+  LCQI
+  OTRO
+}
+
+// Firma - Firma digital del responsable
+model Firma {
+  id              String   @id @default(uuid())
+  cargaId         String   @unique
+  carga           Carga    @relation(fields: [cargaId], references: [id], onDelete: Cascade)
+
+  nombreFirmante  String
+  url             String   // URL de la imagen de firma en Supabase Storage
+
+  createdAt       DateTime @default(now())
+
+  @@map("firmas")
+}
+
+// Configuración global del sistema
+model Configuracion {
+  id                  String   @id @default(uuid())
+  clave               String   @unique
+  valor               String
+  descripcion         String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("configuraciones")
+}
