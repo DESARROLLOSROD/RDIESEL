@@ -3,7 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
 
+console.log('Initializing Supabase client...');
 export const supabase = createClient(supabaseUrl, supabaseServiceKey);
+console.log('Supabase client initialized.');
 
 // Buckets de storage
 export const STORAGE_BUCKETS = {

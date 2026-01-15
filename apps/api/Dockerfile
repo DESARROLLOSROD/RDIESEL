@@ -1,15 +1,14 @@
 # Production image with Node 20
 FROM node:20-alpine AS builder
 
-# Install pnpm and dependencies
+# Install pnpm, dependencies, and libc6-compat for Prisma
+RUN apk add --no-cache libc6-compat
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 
 WORKDIR /app
 
 # Copy configuration files
 COPY package.json pnpm-lock.yaml* ./
-# Note: If building from subdirectory in monorepo, we might need to handle this differently
-# But Railway's Build Context will be the Root Directory if configured so.
 
 COPY . .
 
@@ -23,9 +22,10 @@ RUN pnpm build
 # Final stage
 FROM node:20-alpine
 
-WORKDIR /app
+# Install libc6-compat
+RUN apk add --no-cache libc6-compat
 
-RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
+WORKDIR /app
 
 # Copy production files
 COPY --from=builder /app/dist ./dist
@@ -36,5 +36,5 @@ COPY --from=builder /app/prisma ./prisma
 # Expose port
 EXPOSE 3000
 
-# Start command
-CMD ["pnpm", "start"]
+# Start command (running directly with node is more robust)
+CMD ["node", "dist/index.js"]
