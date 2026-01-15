@@ -11,10 +11,26 @@ import { cargaRouter } from './routes/carga.routes.js';
 import { syncRouter } from './routes/sync.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 
-console.log('Starting server initialization...');
+console.log('--- SERVER STARTING UP ---');
+console.log('Timestamp:', new Date().toISOString());
+
+process.on('uncaughtException', (err) => {
+  console.error('❌ UNCAUGHT EXCEPTION:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ UNHANDLED REJECTION:', reason);
+});
+
+console.log('Initializing express app...');
 const app: express.Express = express();
 const PORT = Number(process.env.PORT) || 3000;
-console.log(`Configured PORT: ${PORT}`);
+console.log('Environment Variables Check:');
+console.log('- PORT:', PORT);
+console.log('- NODE_ENV:', process.env.NODE_ENV);
+console.log('- DATABASE_URL exists:', !!process.env.DATABASE_URL);
+console.log('- SUPABASE_URL exists:', !!process.env.SUPABASE_URL);
 
 // Middleware
 app.use(helmet());

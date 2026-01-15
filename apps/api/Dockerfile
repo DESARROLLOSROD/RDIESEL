@@ -1,8 +1,8 @@
-# Production image with Node 20
-FROM node:20-alpine AS builder
+# Production image with Node 20 Slim
+FROM node:20-slim AS builder
 
-# Install pnpm, dependencies, and libc6-compat for Prisma
-RUN apk add --no-cache libc6-compat
+# Install pnpm and openssl for Prisma
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 
 WORKDIR /app
@@ -20,10 +20,10 @@ RUN pnpm db:generate
 RUN pnpm build
 
 # Final stage
-FROM node:20-alpine
+FROM node:20-slim
 
-# Install libc6-compat
-RUN apk add --no-cache libc6-compat
+# Install openssl for Prisma runtime
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -36,5 +36,6 @@ COPY --from=builder /app/prisma ./prisma
 # Expose port
 EXPOSE 3000
 
-# Start command (running directly with node is more robust)
+# Start command
+ENV NODE_ENV=production
 CMD ["node", "dist/index.js"]
