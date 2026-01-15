@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma.js';
 import { z } from 'zod';
 import { AppError } from '../middleware/error.middleware.js';
 
-export const lcqiRouter = Router();
+export const lcqiRouter: Router = Router();
 
 const createLCQISchema = z.object({
   numeroSerie: z.string().min(1, 'Número de serie requerido'),

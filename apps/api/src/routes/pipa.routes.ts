@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma.js';
 import { z } from 'zod';
 import { AppError } from '../middleware/error.middleware.js';
 
-export const pipaRouter = Router();
+export const pipaRouter: Router = Router();
 
 const createPipaSchema = z.object({
   numero: z.string().min(1, 'Número requerido'),

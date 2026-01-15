@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma.js';
 import { z } from 'zod';
 import { AppError } from '../middleware/error.middleware.js';
 
-export const cargaRouter = Router();
+export const cargaRouter: Router = Router();
 
 // GET /api/cargas - Listar cargas con filtros
 cargaRouter.get('/', async (req, res, next) => {

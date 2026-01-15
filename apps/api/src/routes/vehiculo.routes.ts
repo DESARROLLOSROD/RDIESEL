@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma.js';
 import { z } from 'zod';
 import { AppError } from '../middleware/error.middleware.js';
 
-export const vehiculoRouter = Router();
+export const vehiculoRouter: Router = Router();
 
 const createVehiculoSchema = z.object({
   clienteId: z.string().uuid('ID de cliente inválido'),

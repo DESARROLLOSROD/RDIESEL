@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma.js';
 import { z } from 'zod';
 import { AppError } from '../middleware/error.middleware.js';
 
-export const clienteRouter = Router();
+export const clienteRouter: Router = Router();
 
 const createClienteSchema = z.object({
   nombre: z.string().min(1, 'Nombre requerido'),

@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { AppError } from '../middleware/error.middleware.js';
 import { v4 as uuidv4 } from 'uuid';
 
-export const syncRouter = Router();
+export const syncRouter: Router = Router();
 
 // Schema para sincronización de carga desde móvil
 const syncCargaSchema = z.object({

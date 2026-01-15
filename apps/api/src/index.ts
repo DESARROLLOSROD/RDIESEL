@@ -11,7 +11,7 @@ import { cargaRouter } from './routes/carga.routes.js';
 import { syncRouter } from './routes/sync.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 
-const app = express();
+const app: express.Express = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
