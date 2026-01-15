@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { vehiculosApi, clientesApi, VehiculoCliente } from '@/lib/api';
 import { Plus, Pencil, Trash2, X, QrCode, RefreshCw } from 'lucide-react';

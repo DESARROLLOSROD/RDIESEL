@@ -43,9 +43,9 @@ export default function ReportesPage() {
 
   const estadoData = resumen?.porEstado
     ? Object.entries(resumen.porEstado).map(([name, value]) => ({
-        name,
-        value,
-      }))
+      name,
+      value,
+    }))
     : [];
 
   const exportCSV = () => {
@@ -156,7 +156,7 @@ export default function ReportesPage() {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {estadoData.map((entry, index) => (
+                  {estadoData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
