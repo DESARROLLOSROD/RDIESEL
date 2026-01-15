@@ -33,13 +33,13 @@ export default function Dashboard() {
     },
     {
       name: 'Pipas Activas',
-      value: pipas?.filter((p) => p.activo).length || 0,
+      value: Array.isArray(pipas) ? pipas.filter((p) => p.activo).length : 0,
       icon: Truck,
       color: 'bg-purple-500',
     },
     {
       name: 'Clientes',
-      value: clientes?.filter((c) => c.activo).length || 0,
+      value: Array.isArray(clientes) ? clientes.filter((c) => c.activo).length : 0,
       icon: Users,
       color: 'bg-orange-500',
     },

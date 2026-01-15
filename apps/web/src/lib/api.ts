@@ -1,9 +1,13 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+const VITE_API_URL = import.meta.env.VITE_API_URL || '';
+// Clean trailing slash if exists to avoid doubles
+const API_URL = VITE_API_URL.replace(/\/$/, '');
+
+console.log('DEBUG: API_URL being used:', API_URL);
 
 export const api = axios.create({
-  baseURL: `${API_URL}/api`,
+  baseURL: API_URL ? `${API_URL}/api` : '/api',
   headers: {
     'Content-Type': 'application/json',
   },
