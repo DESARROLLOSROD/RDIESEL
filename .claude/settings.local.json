@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(pnpm install:*)",
-      "Bash(pnpm db:generate:*)"
+      "Bash(pnpm db:generate:*)",
+      "Bash(copy \"apps\\\\api\\\\.env.example\" \"apps\\\\api\\\\.env\")",
+      "Bash(copy \"apps\\\\web\\\\.env.example\" \"apps\\\\web\\\\.env\")",
+      "Bash(cmd /c \"copy apps\\\\api\\\\.env.example apps\\\\api\\\\.env\")",
+      "Bash(cmd /c \"copy apps\\\\web\\\\.env.example apps\\\\web\\\\.env\")",
+      "Bash(pnpm db:push:*)"
     ]
   }
 }
