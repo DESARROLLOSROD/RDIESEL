@@ -8,7 +8,10 @@
       "Bash(cmd /c \"copy apps\\\\api\\\\.env.example apps\\\\api\\\\.env\")",
       "Bash(cmd /c \"copy apps\\\\web\\\\.env.example apps\\\\web\\\\.env\")",
       "Bash(pnpm db:push:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(cd:*)",
+      "Bash(xargs:*)",
+      "Bash(echo \"# API URL - URL del backend\nEXPO_PUBLIC_API_URL=http://localhost:3000\n\n# Para produccion:\n# EXPO_PUBLIC_API_URL=https://tu-api.railway.app\")"
     ]
   }
 }

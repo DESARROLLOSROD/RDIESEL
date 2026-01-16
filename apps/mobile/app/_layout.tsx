@@ -24,6 +24,8 @@ export default function RootLayout() {
           name="index"
           options={{ title: 'RDiesel', headerShown: false }}
         />
+        <Stack.Screen name="setup" options={{ title: 'Configuracion Inicial', headerShown: false }} />
+        <Stack.Screen name="seleccionar-pipa" options={{ title: 'Seleccionar Pipa' }} />
         <Stack.Screen name="carga/scan" options={{ title: 'Escanear QR' }} />
         <Stack.Screen name="carga/vehiculo" options={{ title: 'Datos del Vehiculo' }} />
         <Stack.Screen name="carga/fotos" options={{ title: 'Evidencia Fotografica' }} />
@@ -32,6 +34,7 @@ export default function RootLayout() {
         <Stack.Screen name="carga/firma" options={{ title: 'Firma' }} />
         <Stack.Screen name="carga/resumen" options={{ title: 'Resumen' }} />
         <Stack.Screen name="pendientes" options={{ title: 'Pendientes de Sincronizar' }} />
+        <Stack.Screen name="configuracion" options={{ title: 'Configuracion' }} />
       </Stack>
     </>
   );

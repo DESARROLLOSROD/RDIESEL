@@ -25,6 +25,7 @@ interface SyncStore {
   pendingCount: number;
   isSyncing: boolean;
   lastSync: string | null;
+  pipaSeleccionadaId: string | null;
   initDatabase: () => Promise<void>;
   loadCatalogo: () => Promise<void>;
   syncCatalogo: () => Promise<void>;
@@ -33,6 +34,8 @@ interface SyncStore {
   syncPendingCargas: () => Promise<void>;
   updatePendingCount: () => Promise<void>;
   getVehiculoByQR: (qrCode: string) => CatalogItem | undefined;
+  setPipaSeleccionada: (pipaId: string | null) => void;
+  getPipaSeleccionada: () => CatalogItem | undefined;
 }
 
 export const useSyncStore = create<SyncStore>((set, get) => ({
@@ -41,6 +44,7 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
   pendingCount: 0,
   isSyncing: false,
   lastSync: null,
+  pipaSeleccionadaId: null,
 
   initDatabase: async () => {
     try {
@@ -96,7 +100,12 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
     try {
       set({ isSyncing: true });
 
-      const response = await fetch(`${API_URL}/api/sync/catalogo`);
+      const response = await fetch(`${API_URL}/api/sync/catalogo`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       if (!response.ok) throw new Error('Error fetching catalogo');
 
       const catalogo = await response.json();
@@ -111,6 +120,7 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
       set({ catalogo, lastSync: catalogo.timestamp });
     } catch (error) {
       console.error('Error syncing catalogo:', error);
+      throw error;
     } finally {
       set({ isSyncing: false });
     }
@@ -253,5 +263,15 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
   getVehiculoByQR: (qrCode: string) => {
     const { catalogo } = get();
     return catalogo?.vehiculos.find((v) => v.qrCode === qrCode);
+  },
+
+  setPipaSeleccionada: (pipaId: string | null) => {
+    set({ pipaSeleccionadaId: pipaId });
+  },
+
+  getPipaSeleccionada: () => {
+    const { catalogo, pipaSeleccionadaId } = get();
+    if (!pipaSeleccionadaId || !catalogo) return undefined;
+    return catalogo.pipas.find((p) => p.id === pipaSeleccionadaId);
   },
 }));

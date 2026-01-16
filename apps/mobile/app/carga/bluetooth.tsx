@@ -30,8 +30,25 @@ export default function BluetoothScreen() {
 
   const setLCQI = useCargaStore((state) => state.setLCQI);
   const catalogo = useSyncStore((state) => state.catalogo);
+  const pipaSeleccionadaId = useSyncStore((state) => state.pipaSeleccionadaId);
+  const getPipaSeleccionada = useSyncStore((state) => state.getPipaSeleccionada);
+
+  const pipaSeleccionada = getPipaSeleccionada();
 
   useEffect(() => {
+    // Si ya hay una pipa seleccionada con LCQI, conectar automaticamente
+    if (pipaSeleccionada?.lcqiId && catalogo?.lcqis) {
+      const lcqi = catalogo.lcqis.find((l: any) => l.id === pipaSeleccionada.lcqiId);
+      if (lcqi) {
+        setConnecting(lcqi.id);
+        setTimeout(() => {
+          setLCQI(lcqi.id, lcqi.macBluetooth, pipaSeleccionada.id);
+          setConnecting(null);
+          router.push('/carga/proceso');
+        }, 1500);
+        return;
+      }
+    }
     startScan();
   }, []);
 
@@ -43,10 +60,10 @@ export default function BluetoothScreen() {
     // Mostrar LCQIs del catálogo como dispositivos "encontrados"
     setTimeout(() => {
       if (catalogo?.lcqis && catalogo?.pipas) {
-        const lcqiDevices: LCQIDevice[] = catalogo.lcqis
-          .filter((lcqi) => lcqi.activo)
-          .map((lcqi) => {
-            const pipa = catalogo.pipas.find((p) => p.lcqiId === lcqi.id);
+        let lcqiDevices: LCQIDevice[] = catalogo.lcqis
+          .filter((lcqi: any) => lcqi.activo)
+          .map((lcqi: any) => {
+            const pipa = catalogo.pipas.find((p: any) => p.lcqiId === lcqi.id);
             return {
               id: lcqi.id,
               mac: lcqi.macBluetooth,
@@ -55,7 +72,12 @@ export default function BluetoothScreen() {
               pipaNumero: pipa?.numero || 'Sin pipa',
             };
           })
-          .filter((d) => d.pipaId);
+          .filter((d: LCQIDevice) => d.pipaId);
+
+        // Si hay pipa seleccionada, filtrar solo su LCQI
+        if (pipaSeleccionadaId) {
+          lcqiDevices = lcqiDevices.filter((d) => d.pipaId === pipaSeleccionadaId);
+        }
 
         setDevices(lcqiDevices);
       }
