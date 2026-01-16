@@ -11,7 +11,15 @@
       "Bash(taskkill:*)",
       "Bash(cd:*)",
       "Bash(xargs:*)",
-      "Bash(echo \"# API URL - URL del backend\nEXPO_PUBLIC_API_URL=http://localhost:3000\n\n# Para produccion:\n# EXPO_PUBLIC_API_URL=https://tu-api.railway.app\")"
+      "Bash(echo \"# API URL - URL del backend\nEXPO_PUBLIC_API_URL=http://localhost:3000\n\n# Para produccion:\n# EXPO_PUBLIC_API_URL=https://tu-api.railway.app\")",
+      "Bash(npx eas init)",
+      "Bash(curl:*)",
+      "Bash(node:*)",
+      "Bash(npx expo start --clear)",
+      "Bash(if not exist \"C:\\\\Dev\" mkdir \"C:\\\\Dev\")",
+      "Bash(robocopy:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(npm install:*)"
     ]
   }
 }
