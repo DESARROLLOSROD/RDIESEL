@@ -1,17 +1,43 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
 import { useSyncStore } from '@/stores/sync.store';
+import { View } from 'react-native';
+
+// Mantener el splash screen visible mientras cargamos recursos
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [appIsReady, setAppIsReady] = useState(false);
   const initDatabase = useSyncStore((state) => state.initDatabase);
 
   useEffect(() => {
-    initDatabase();
+    async function prepare() {
+      try {
+        await initDatabase();
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
   }, []);
 
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
+
   return (
-    <>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -36,6 +62,6 @@ export default function RootLayout() {
         <Stack.Screen name="pendientes" options={{ title: 'Pendientes de Sincronizar' }} />
         <Stack.Screen name="configuracion" options={{ title: 'Configuracion' }} />
       </Stack>
-    </>
+    </View>
   );
 }
