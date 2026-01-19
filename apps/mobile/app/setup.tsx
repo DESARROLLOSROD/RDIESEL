@@ -9,7 +9,7 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Network from 'expo-network';
-import { useSyncStore } from '@/stores/sync.store';
+import { useSyncStore, API_URL } from '@/stores/sync.store';
 
 export default function SetupScreen() {
   const router = useRouter();
@@ -48,12 +48,15 @@ export default function SetupScreen() {
       setStatus('ready');
     } catch (error: any) {
       console.error('Error in setup:', error);
+
+      const detail = error.message || 'Error desconocido';
+
       if (catalogo && catalogo.vehiculos.length > 0) {
         // Hay catalogo local, podemos continuar
         setStatus('ready');
       } else {
         setStatus('error');
-        setErrorMessage(error.message || 'Error al sincronizar');
+        setErrorMessage(`No se pudo conectar con el servidor.\nAPI: ${API_URL}\nError: ${detail}`);
       }
     }
   };

@@ -3,7 +3,7 @@ import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 import { CargaEnProceso } from './carga.store';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+export const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
 
 interface CatalogItem {
   id: string;
@@ -229,7 +229,7 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
               if (ev.uri) {
                 try {
                   await FileSystem.deleteAsync(ev.uri, { idempotent: true });
-                } catch {}
+                } catch { }
               }
             }
           }
