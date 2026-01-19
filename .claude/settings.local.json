@@ -19,7 +19,8 @@
       "Bash(if not exist \"C:\\\\Dev\" mkdir \"C:\\\\Dev\")",
       "Bash(robocopy:*)",
       "Bash(powershell -Command:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npx expo install:*)"
     ]
   }
 }
